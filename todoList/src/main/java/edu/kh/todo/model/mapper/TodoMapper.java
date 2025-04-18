@@ -36,4 +36,13 @@ public interface TodoMapper {
 	int addTodo(Todo todo);
 
 	Todo todoDetil(int todoNo);
+
+	int changComplete(Todo todo);
+
+	int todoUpdate(Todo todo);
+
+	int todoDelete(int todoNo);
+
+	int getTotalCount();
+	
 }
