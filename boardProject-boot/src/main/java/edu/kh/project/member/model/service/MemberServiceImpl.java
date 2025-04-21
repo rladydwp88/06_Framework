@@ -29,8 +29,8 @@ public class MemberServiceImpl implements MemberService{
 		// 암호화 진행
 		
 		// bcrypt.encode(문자열) : 문자열을 암호화하여 반환
-		// String bcryptPassword = bcrypt.encode(inputMember.getMemberPw());
-		// log.debug("bcryptPassword : " + bcryptPassword);
+		String bcryptPassword = bcrypt.encode(inputMember.getMemberPw());
+		log.debug("bcryptPassword : " + bcryptPassword);
 		
 		// bcrypt.matches(평문, 암호화): 평문과 암호화가 일치하면 true, 아니면 false 반환
 		
