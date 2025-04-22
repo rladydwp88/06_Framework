@@ -94,6 +94,9 @@ SELECT * FROM "TB_AUTH_KEY";
 
 COMMIT;
 
+SELECT COUNT(*) FROM "MEMBER"
+WHERE MEMBER_EMAIL = #{memberEmail}
+AND MEMBER_DEL_FL = 'N';
 
 ------------------------------------------
 
