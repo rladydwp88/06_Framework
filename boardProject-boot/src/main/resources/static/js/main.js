@@ -51,3 +51,24 @@ if(loginEmail != null) { // 로그인폼의 이메일 input 태그가 화면상�
     document.querySelector("input[name='saveId']").checked = true;
   }
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const loginForm = document.getElementById("loginForm");
+
+  if (loginForm) {
+    loginForm.addEventListener("submit", (e) => {
+      const emailInput = loginForm.querySelector("input[name='memberEmail']");
+      const pwInput = loginForm.querySelector("input[name='memberPw']");
+
+      const email = emailInput.value.trim();
+      const pw = pwInput.value.trim();
+
+      if (email === "" || pw === "") {
+        e.preventDefault(); // 폼 제출 막기
+        alert("아이디 또는 비밀번호를 입력해 주세요.");
+      }
+    });
+  }
+});
+
+

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 
 <head>
   <meta charset="UTF-8">
@@ -69,7 +69,7 @@
         <th:block th:if="${session.loginMember != null}">
           <article class="login-area">
 
-            <a href="#">
+            <a href="/myPage/info">
               <!-- 프로필 이미지 -->
 
               <!-- 
@@ -86,7 +86,7 @@
             <div class="my-info" th:Object="${session.loginMember}">
 
               <div>
-                <a href="#" id="nickname" th:text="*{memberNickname}">닉네임</a>
+                <a href="/myPage/info" id="nickname" th:text="*{memberNickname}">닉네임</a>
                 <a href="/member/logout" id="logoutBtn">로그아웃</a>
               </div>
 
