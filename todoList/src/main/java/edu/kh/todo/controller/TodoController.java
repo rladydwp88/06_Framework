@@ -154,4 +154,12 @@ public class TodoController {
 		ra.addFlashAttribute("message", message);
 		return "redirect:/";
 	}
+	
+	@PostMapping("update")
+	public String todoChange(@ModelAttribute Todo todo, Model model) {
+		
+		
+		
+		return "";
+	}
 }
