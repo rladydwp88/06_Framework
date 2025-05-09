@@ -71,4 +71,41 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+const searchForm = document.getElementById('searchForm');
+const queryInput = document.getElementById('query');
+const searchBtn = document.getElementById('searchBtn');
+const searchResult = document.getElementById('searchResult');
+const boardListContainer = document.querySelector('.board-list-container'); // 게시글 목록을 감싸는 컨테이너 (실제 구조에 맞게 수정)
+
+searchBtn.addEventListener('click', function() {
+  const query = queryInput.value.trim();
+  const boardCode = window.location.pathname.split('/')[2]; // 현재 게시판 코드 추출
+
+  if (query) {
+    fetch(`/board/search?query=${query}&key=t&boardCode=${boardCode}`)
+      .then(response => response.text())
+      .then(html => {
+        // 검색 결과를 현재 게시글 목록 위치에 렌더링
+        if (boardListContainer) {
+          boardListContainer.innerHTML = html;
+        } else {
+          // 만약 게시글 목록 컨테이너가 없다면, 검색 결과를 searchResult에 표시 (임시)
+          searchResult.innerHTML = html;
+          searchResult.classList.remove('close');
+        }
+      })
+      .catch(error => {
+        console.error('검색 오류:', error);
+      });
+  } else {
+    alert('검색어를 입력해주세요.');
+  }
+});
+
+queryInput.addEventListener('keypress', function(event) {
+  if (event.key === 'Enter') {
+    searchBtn.click();
+  }
+});
+
 

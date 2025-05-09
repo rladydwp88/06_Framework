@@ -3,6 +3,7 @@ package edu.kh.project.board.controller;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,19 +57,31 @@ public class BoardController {
 	@GetMapping("{boardCode:[0-9]+}")
 	public String selectBoardList(@PathVariable("boardCode") int boardCode,
 								@RequestParam(value="cp", required = false, defaultValue = "1") int cp,
-								Model model) {
+								Model model, @RequestParam Map<String, Object> paramMap ) {
+		
+		// paramMap = {"query"="짱구", "key"="tc"}
 		
 		// 조회 서비스 호출 후 결과 반환 받기.
 		Map<String, Object> map = null;
 		
 		// 조건에 따라 서비스 메서드 분기처리 하기 위해 map은 선언만 함.
 		
-		// 검색이 아닌 경우
-		
-		// 게시글 목록 조회 서비스 호출
-		map = service.selectBoardList(boardCode, cp);
-		
-		// 검색인 경우
+		// 검색이 아닌 경우 -> paramMap은 {}
+		if(paramMap.get("key") == null) {
+			// 게시글 목록 조회 서비스 호출
+			map = service.selectBoardList(boardCode, cp);
+			
+		} else {
+			// 검색인 경우 --> // paramMap = {"query"="짱구", "key"="tc"}
+			
+			// boardCode를 paramMap에 추가
+			paramMap.put("boardCode", boardCode);
+			// --> paramMap = {"query"="짱구", "key"="tc", "boardCode"=1}
+			
+			// 검색 서비스 호출
+			map = service.searchList(paramMap, cp);
+			
+		}
 		
 		// model에 반환 받은 값 등록
 		model.addAttribute("pagination", map.get("pagination"));
@@ -137,30 +150,29 @@ public class BoardController {
 				
 				for(Cookie temp : cookies) {
 					// 요청에 담긴 쿠키에 "readBoardNo"가 존재할 때
-					if(temp.getName().equals("readBoardNo")) {
-						c = temp;
-						break;
-					}
+					if ("readBoardNo".equals(temp.getName())) {
+			            c = temp;
+			            break;
+			        }
 				}
 				
 				int result = 0; // 조회 수 증가 결과를 저장할 변수
 				
 				// "readBoardNo"가 쿠키에 없을 때
-				if(c != null) {
+				if(c == null) {
 					// 새 쿠키 생성("readBoardNo", [게시글 번호])
 					c = new Cookie("readBoardNo", "[" + boardNo + "]");
-					result = service.updateReadCount(boardNo);
+				    result = service.updateReadCount(boardNo);
 					
 				} else {
 				// "readBoardNo"가 쿠키에 dlT을 때
 				// "readBoardNo" : [2][30][400]
 					
 				// 현재 게시글을 처음 읽는 경우
-					if(c.getValue().indexOf("[" + boardNo + "]") == -1) {
-						// 해당 글 번호를 쿠키에 누적 + 서비스 호출
-						c.setValue(c.getValue() + "[" + boardNo + "]");
-						result = service.updateReadCount(boardNo);
-					}
+					if(c.getValue() != null && !c.getValue().contains("[" + boardNo + "]")) {
+				        c.setValue(c.getValue() + "[" + boardNo + "]");
+				        result = service.updateReadCount(boardNo);
+				    }
 					
 				}
 				
@@ -228,5 +240,23 @@ public class BoardController {
 	@PostMapping("like") // / board/like (POST)
 	public int boardLike(@RequestBody Map<String, Integer> map) {
 		return service.boardLike(map);
+	}
+	
+	/** 전체 검색
+	 * @param query
+	 * @param key
+	 * @param boardCode
+	 * @param model
+	 * @return
+	 */
+	@GetMapping("search")
+	public String boardSearch(@RequestParam("query") String query,
+	                            @RequestParam("key") String key,
+	                            @RequestParam("boardCode") int boardCode,
+	                            Model model) {
+
+	    List<Board> boardList = service.selectSearchList(boardCode, key, query);
+	    model.addAttribute("boardList", boardList);
+	    return "board/boardList :: boardListArea"; // Thymeleaf 조각 페이지 반환
 	}
 }
