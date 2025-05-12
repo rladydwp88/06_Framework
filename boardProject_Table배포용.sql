@@ -641,6 +641,15 @@ END;
 
 SELECT NEXT_IMG_NO() FROM DUAL;
 
+-- DB 이미지 파일명 목록 조회 (게시판/프로필)
+SELECT SUBSTR(PROFILE_IMG, INSTR(PROFILE_IMG, '/', -1) + 1) AS "rename"
+FROM "MEMBER"
+WHERE PROFILE_IMG IS NOT NULL
+UNION
+SELECT CAST(IMG_RENAME AS VARCHAR2(300)) "rename"
+FROM "BOARD_IMG";
+
+-- ORA-12704: 문자 집합이 일치하지 않습니다
 
 ----------------------------------------------------------
 /* 채팅 */

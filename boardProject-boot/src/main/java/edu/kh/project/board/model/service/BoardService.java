@@ -52,4 +52,9 @@ public interface BoardService {
 	 */
 	List<Board> selectSearchList(int boardCode, String key, String query);
 
+	/** DB 이미지 파일명 목록 조회
+	 * @return
+	 */
+	List<String> selectDbImageList();
+
 }
