@@ -78,3 +78,14 @@ public class BoardTypeInterceptor implements HandlerInterceptor {
 	}
 	
 }
+
+/*
+인터셉터에서
+SQL selelct문 사용시 언더스코어 컬럼명을 그대로 사용해도
+조회된 내용을 DTO에 가지고 가서 쓴다면 마이바티스가 알아서 변환을 해주겠지만
+DTO를 사용하지 않고 Map으로 가져오려고 하기 때문에
+DB에서 사용하는 언더스코어로 데이터명은
+자바에서 사용하기에는 알맞지 않음.
+
+그래서 자바에서 사용하기 알맞는 카멜케이스 표기법으로 별칭을 작성하여 가져옴
+*/
